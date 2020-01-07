@@ -19,7 +19,7 @@ public class BaseEntity<T extends Model<T>> extends Model<T> {
     @TableId(value = "id", type = IdType.AUTO)
     protected Long id;
 
-//    @JsonIgnore
-//    @TableLogic //逻辑删除标签
-//    private Boolean deleteFlag;//0-exist, 1-delete
+    @JsonIgnore
+    @TableLogic //逻辑删除标签
+    private Boolean deleteFlag;//0-exist, 1-delete
 }

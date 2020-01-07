@@ -1,12 +1,10 @@
 package com.jc.unity.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.jc.unity.model.ResultData;
-import com.jc.unity.model.Scene;
+import com.jc.unity.model.SceneDO;
 import com.jc.unity.service.SceneService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,23 +18,22 @@ import java.io.IOException;
  */
 @Slf4j
 @RestController
-@RequestMapping("scene")
+@RequestMapping("/scene")
 public class SceneController {
     @Autowired
     public SceneService sceneService;
 
-    @PostMapping("page")
+    @PostMapping("/page")
     public ResultData page(Integer startIndex, Integer pageSize){
         try{
             return ResultData.SUCCESS(sceneService.page(startIndex, pageSize));
         }catch (Exception e){
-
             return ResultData.FAILURE(e.toString());
         }
     }
 
-    @PostMapping("detail")
-    public ResultData page(Long id){
+    @PostMapping("/detail")
+    public ResultData detail(Long id){
         try{
             return ResultData.SUCCESS(sceneService.getById(id));
         }catch (Exception e){
@@ -44,12 +41,12 @@ public class SceneController {
         }
     }
 
-    @PostMapping("save")
-    public ResultData save(String name, MultipartFile content, Long deployTime) throws IOException {
-        Scene scene = new Scene();
+    @PostMapping("/save")
+    public ResultData save(String name, MultipartFile content) throws IOException {
+        SceneDO scene = new SceneDO();
         scene.setName(name);
         scene.setContent(content.getBytes());
-        scene.setDeployTime(deployTime);
+        scene.setDeployTime(System.currentTimeMillis()/1000);
         try{
             return sceneService.save(scene) ? ResultData.SUCCESS("提交成功"):ResultData.FAILURE("提交失败");
         }catch (Exception e){

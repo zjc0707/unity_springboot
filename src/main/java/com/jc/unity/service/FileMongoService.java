@@ -21,8 +21,7 @@ public interface FileMongoService {
      * @param id
 	 */
 	void removeFile(String fileSlot, String id);
-	void removeFile(String fileUrl);
-
+	void removeFile(String url);
 	/**
 	 * 根据id获取文件
 	 * @param fileSlot
@@ -30,5 +29,4 @@ public interface FileMongoService {
 	 * @return
 	 */
 	FileMongoDO getFileById(String fileSlot, String id);
-
 }

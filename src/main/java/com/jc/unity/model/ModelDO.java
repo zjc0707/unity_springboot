@@ -1,25 +1,20 @@
 package com.jc.unity.model;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-
-import java.sql.Blob;
-
 
 /**
  * @author zjc
- * @date 2019/11/18
+ * @date 2020/1/2
  */
 @Data
-@NoArgsConstructor
-@TableName("scene")
 @EqualsAndHashCode(callSuper = false)
-public class Scene extends BaseEntity<Scene> {
+@TableName("model")
+public class ModelDO extends BaseEntity<ModelDO> {
     private String name;
-    private byte[] content;
-    private Long userId;
+    private String fileUrl;
+    private Long modelTypeId;
+    private Long size;
     private Long deployTime;
 }

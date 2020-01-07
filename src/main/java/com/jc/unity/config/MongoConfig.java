@@ -49,7 +49,13 @@ public class MongoConfig {
     @Autowired
     private MongoOperations mongoOperations;
 
+    /**
+     * 用于增删改查
+     */
     private Map<String, GridFsOperations> gridFsOperationsMap = new HashMap<>();
+    /**
+     * 下载查询到的对象
+     */
     private Map<String, GridFSBucket> gridFSBucketMap = new HashMap<>();
     /**
      * 进行桶和集合的初始化生成,最大MAX_BUCKET_OR_COLLECTION_NUM
@@ -63,8 +69,9 @@ public class MongoConfig {
         {
             GridFsOperations gridFsOperations = new GridFsTemplate(mongoDbFactory, mappingMongoConverter(),Integer.toString(i + mongoConnectParamConfig.getBucketCollectNum()));
             gridFsOperationsMap.put(Integer.toString(i + mongoConnectParamConfig.getBucketCollectNum()), gridFsOperations);
-            GridFSBucket gridFSBucket = GridFSBuckets.create(mongoDbFactory.getDb(),Integer.toString(i + mongoConnectParamConfig.getBucketCollectNum()));
+            GridFSBucket gridFSBucket = GridFSBuckets.create(mongoDbFactory.getDb(), Integer.toString(i + mongoConnectParamConfig.getBucketCollectNum()));
             gridFSBucketMap.put(Integer.toString(i + mongoConnectParamConfig.getBucketCollectNum()), gridFSBucket);
+
             if (!mongoOperations.collectionExists(Integer.toString(i))) {
                 mongoOperations.createCollection(Integer.toString(i));
             }
@@ -87,7 +94,6 @@ public class MongoConfig {
     public MongoClient mongoClient(){
         log.info(this.toString());
         MongoClientOptions.Builder builder = new MongoClientOptions.Builder();
-        // todo:此处可加优化参数
         //连接数
         builder.connectionsPerHost(10);
         //最小连接数
