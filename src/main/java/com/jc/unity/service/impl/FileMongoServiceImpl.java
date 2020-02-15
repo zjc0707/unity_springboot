@@ -40,7 +40,6 @@ public class FileMongoServiceImpl implements FileMongoService {
 	@Override
 	public String saveFile(MultipartFile file) {
 		try {
-			//todo: 存疑，没用到bucket
 			long index = file.getSize() % mongoConnectParamConfig.getBucketCollectNum();
 			if (file.getSize() <= mongoConnectParamConfig.getMaxCollectFileSize()) {
 				FileMongoDO fileMongoDO = new FileMongoDO(file.getOriginalFilename(), file.getContentType(), file.getSize(), new Binary(file.getBytes()));

@@ -47,6 +47,20 @@ public class ModelController {
     }
 
     /**
+     * 根据模型id查找
+     * @param id 模型id
+     */
+    @GetMapping("/findById")
+    public ResultData findById(Long id){
+        try{
+            return ResultData.SUCCESS(modelService.getById(id));
+        }catch (Exception e){
+            log.error(e.toString());
+            return ResultData.FAILURE(e.toString());
+        }
+    }
+
+    /**
      * 上传模型文件
      * @param name 模型名称
      * @param file 模型文件
