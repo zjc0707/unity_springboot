@@ -5,6 +5,7 @@ import com.jc.unity.model.ResultData;
 import com.jc.unity.service.FileMongoService;
 import com.jc.unity.service.ModelService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,12 +29,11 @@ public class ModelController {
 
     /**
      * 查看选择类型的全部模型基本数据
-     * @param typeId 模型类型id，默认0为通用模型
      */
     @GetMapping("/findList")
-    public ResultData findList(@RequestParam(defaultValue = "0") Long typeId){
+    public ResultData findList(){
         try{
-            List<ModelDO> rs = this.modelService.listByTypeId(typeId);
+            List<ModelDO> rs = this.modelService.list();
             if(rs == null || rs.isEmpty()){
                 log.error("not found");
                 return ResultData.FAILURE("not found");
@@ -63,21 +63,24 @@ public class ModelController {
     /**
      * 上传模型文件
      * @param name 模型名称
-     * @param file 模型文件
+     * @param fileWindows 模型文件
+     * @param fileMac 模型文件
      * @return 先上传至mongodb，成功后再写入mysql数据库，后者失败则删除mongodb的数据
      */
     @PostMapping("/upload")
-    public ResultData upload(String name, MultipartFile file){
+    public ResultData upload(String name, Long typeId, MultipartFile fileWindows, MultipartFile fileMac){
         try{
-            String url = fileMongoService.saveFile(file);
-            if(!url.isEmpty()){
-                if(modelService.save(name, url, file.getSize()/1024)){
-                    log.info("success:[name:" + name + ", url:" + url + "]");
-                    return ResultData.SUCCESS("");
+            String urlWindows = fileMongoService.saveFile(fileWindows);
+            String urlMac = fileMongoService.saveFile(fileMac);
+            if(!urlWindows.isEmpty() && !urlMac.isEmpty()){
+                if(modelService.save(name, typeId, urlMac, urlWindows, fileMac.getSize()/1024)){
+                    log.info("success:[name:" + name + ", urlMac:" + urlMac + ", urlWindows:" + urlWindows + "]");
+                    return ResultData.SUCCESS("upload success");
                 }else{
                     log.error("fail:[name: " + name + "]");
-                    fileMongoService.removeFile(url);
-                    return ResultData.FAILURE("");
+                    fileMongoService.removeFile(urlMac);
+                    fileMongoService.removeFile(urlWindows);
+                    return ResultData.FAILURE("fail:[name: " + name + "]");
                 }
             }
             log.error("url empty");
@@ -101,7 +104,8 @@ public class ModelController {
                 log.error("not found id=" + id);
                 return ResultData.FAILURE("result = null: id=" + id);
             }
-            fileMongoService.removeFile(modelDO.getFileUrl());
+            fileMongoService.removeFile(modelDO.getFileUrlMac());
+            fileMongoService.removeFile(modelDO.getFileUrlWindows());
             modelService.removeById(id);
             log.info("remove success");
             return ResultData.SUCCESS("");

@@ -17,11 +17,13 @@ import java.util.List;
 @Service
 public class ModelServiceImpl extends ServiceImpl<ModelMapper, ModelDO> implements ModelService {
     @Override
-    public boolean save(String name, String url, Long size) {
+    public boolean save(String name, Long typeId, String fileUrlMac, String fileUrlWindows, Long size) {
         ModelDO modelDO = new ModelDO();
         modelDO.setName(name);
-        modelDO.setFileUrl(url);
+        modelDO.setFileUrlMac(fileUrlMac);
+        modelDO.setFileUrlWindows(fileUrlWindows);
         modelDO.setSize(size);
+        modelDO.setModelTypeId(typeId);
         modelDO.setDeployTime(System.currentTimeMillis()/1000);
         return this.save(modelDO);
     }

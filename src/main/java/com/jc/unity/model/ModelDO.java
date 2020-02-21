@@ -13,7 +13,8 @@ import lombok.EqualsAndHashCode;
 @TableName("model")
 public class ModelDO extends BaseEntity<ModelDO> {
     private String name;
-    private String fileUrl;
+    private String fileUrlWindows;
+    private String fileUrlMac;
     private Long modelTypeId;
     private Long size;
     private Long deployTime;

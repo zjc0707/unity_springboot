@@ -10,6 +10,6 @@ import java.util.List;
  * @date 2020/1/2
  */
 public interface ModelService extends IService<ModelDO> {
-    boolean save(String name, String url, Long size);
+    boolean save(String name, Long typeId, String fileUrlMac, String fileUrlWindows, Long size);
     List<ModelDO> listByTypeId(Long typeId);
 }
